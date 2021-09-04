@@ -3,6 +3,5 @@
   "JWTokenSecret": "ey5CWUnp9YvYmsZZ66J1IM90LOzuP721",
   "bootstrapServer": "http://localhost:9092",
   "topics": ["notification"],
-  "serviceName": "microservice-notification",
-  "sendGridKey": "new config"
+  "serviceName": "microservice-notification"
 }

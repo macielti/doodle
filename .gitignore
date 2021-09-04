@@ -12,3 +12,4 @@ pom.xml.asc
 .hg/
 /.idea/
 /microservice-notification.iml
+/resources/config.json

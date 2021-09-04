@@ -26,7 +26,7 @@
 (s/defn kafka-record->clj-message
   [record :- ConsumerRecord]
   {:topic (keyword (.topic record))
-   :value (json/decode (.value record))})
+   :value (json/decode (.value record) true)})
 
 (s/defn handler-by-topic
   [topic :- s/Keyword
