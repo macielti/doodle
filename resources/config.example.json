@@ -2,6 +2,10 @@
   "datomicUri": "datomic:mem://example",
   "JWTokenSecret": "ey5CWUnp9YvYmsZZ66J1IM90LOzuP721",
   "bootstrapServer": "http://localhost:9092",
-  "topics": ["notification"],
-  "serviceName": "microservice-notification"
+  "topics": [
+    "notification"
+  ],
+  "serviceName": "microservice-notification",
+  "sendGridKey": "random-api-key",
+  "companyEmail": "example@example.com"
 }
