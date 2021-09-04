@@ -6,15 +6,36 @@
             [io.pedestal.interceptor :as interceptor]
             [io.pedestal.interceptor.chain :as chain]
             [cheshire.core :as json]
+            [environ.core :as environ]
+            [io.pedestal.interceptor.error :as error]
             [clojure.tools.logging :as log])
   (:import (org.apache.kafka.common.serialization StringDeserializer)
-           (org.apache.kafka.clients.consumer KafkaConsumer ConsumerRecord)))
+           (org.apache.kafka.clients.consumer KafkaConsumer ConsumerRecord MockConsumer OffsetResetStrategy)
+           (org.apache.kafka.common TopicPartition)
+           (java.time Duration)))
 
 (def kafka-client-starter
   (interceptor/interceptor
     {:name  ::kafka-client
      :enter (fn [{:keys [consumer-props] :as context}]
               (assoc context :kafka-client (new KafkaConsumer consumer-props)))}))
+
+(def mock-kafka-client-starter
+  (interceptor/interceptor
+    {:name  ::mock-kafka-client
+     :enter (fn [{:keys [_] :as context}]
+              (assoc context :kafka-client (new MockConsumer OffsetResetStrategy/EARLIEST)))}))
+
+(def mock-subscriber
+  (interceptor/interceptor
+    {:name  ::mock-subscriber
+     :enter (fn [{:keys [topics kafka-client] :as context}]
+              (doto kafka-client
+                (.subscribe topics)
+                (.rebalance (map #(TopicPartition. % 0) topics)))
+              (doseq [topic topics]
+                (.updateBeginningOffsets kafka-client {(TopicPartition. topic 0) (long 0)}))
+              context)}))
 
 (def subscriber
   (interceptor/interceptor
@@ -23,8 +44,8 @@
               (.subscribe kafka-client topics)
               context)}))
 
-(s/defn kafka-record->clj-message
-  [record :- ConsumerRecord]
+(defn kafka-record->clj-message
+  [record]
   {:topic (keyword (.topic record))
    :value (json/decode (.value record) true)})
 
@@ -37,18 +58,17 @@
   (interceptor/interceptor
     {:name  ::kafka-consumer
      :enter (fn [{:keys [kafka-client topic-consumers components] :as context}]
-              (future
-                (try
+              (try
+                (future
                   (while true
-                    (let [records (seq (.poll kafka-client 100))]
+                    (let [records (seq (.poll kafka-client (Duration/ofMillis 100)))]
                       (doseq [record records]
-                        (let [{:keys [topic] :as message} (-> record
-                                                              kafka-record->clj-message)
+                        (let [{:keys [topic] :as message} (kafka-record->clj-message record)
                               {:keys [handler]} (handler-by-topic topic topic-consumers)]
-                          (handler message components)))))
-                  (catch Exception error
-                    (log/error error)
-                    (.close kafka-client))))
+                          (handler message components))))))
+                (catch Exception ex
+                  (log/error ex)
+                  (.close kafka-client)))
               context)}))
 
 (s/defrecord Consumer [config]
@@ -65,12 +85,16 @@
                           :topics          topics
                           :topic-consumers diplomatic.consumer/topic-consumers
                           :components      components}
-          {:keys [kafka-client]} (chain/execute context [kafka-client-starter subscriber kafka-consumer!])]
-      (assoc this :kafka-client kafka-client)))
+          env            (keyword (environ/env :clj-env))]
+      (cond-> this
+              (false? (= env :test)) (assoc :consumer (-> (chain/execute context [kafka-client-starter subscriber kafka-consumer!])
+                                                          :kafka-client))
+              (= env :test) (assoc :consumer (-> (chain/execute context [mock-kafka-client-starter mock-subscriber kafka-consumer!])
+                                                 :kafka-client)))))
 
-  (stop [{:keys [kafka-client] :as this}]
-    (.close kafka-client)
-    (assoc this :kafka-client nil)))
+  (stop [{:keys [consumer] :as this}]
+    (.close consumer)
+    (assoc this :consumer nil)))
 
 (defn new-consumer []
   (->Consumer {}))

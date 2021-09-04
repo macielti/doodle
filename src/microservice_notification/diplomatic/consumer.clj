@@ -10,10 +10,10 @@
   [{:keys [value] :as message} :- wire.in.notification/NotificationMessage
    {{:keys [send-grid-key company-email]} :config}]
   (s/validate wire.in.notification/NotificationMessage message)
-  (sg/send-email (adapters.send-grid.notification/->wire message
-                                                         company-email
-                                                         send-grid-key))
-  (log/info message))
+  (let [result (sg/send-email (adapters.send-grid.notification/->wire message
+                                                                      company-email
+                                                                      send-grid-key))]
+    (log/info message result)))
 
 (def topic-consumers
   {:notification {:schema  wire.in.notification/NotificationMessage
