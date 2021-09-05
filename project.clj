@@ -4,7 +4,7 @@
             :url  "https://www.eclipse.org/legal/epl-2.0/"}
 
   :plugins [[lein-cloverage "1.2.2"]
-            [lein-environ "1.2.0" :exclusions [org.clojure/clojure org.clojure/core.rrb-vector]]]
+            [lein-environ "1.2.0"]]
 
   :dependencies [[ch.qos.logback/logback-classic "1.2.3"]
                  [org.apache.kafka/kafka-clients "2.1.0"]
@@ -17,13 +17,10 @@
                  [clj-http-fake "1.0.3"]
                  [clj-sendgrid "0.1.2"]
                  [cheshire "5.10.0"]
-                 [spyscope "0.1.6"]
                  [environ "1.2.0"]]
 
   :profiles {:test {:env {:clj-env "test"
                           :clj-config-path "resources/config.example.json"}}}
-
-  :injections [(require 'spyscope.core)]
 
   :resource-paths ["resources"]
 
