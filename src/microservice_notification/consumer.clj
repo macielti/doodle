@@ -6,27 +6,11 @@
             [io.pedestal.interceptor :as interceptor]
             [io.pedestal.interceptor.chain :as chain]
             [cheshire.core :as json]
-            [environ.core :as environ]
-            [io.pedestal.interceptor.error :as error]
-            [clojure.tools.logging :as log])
+            [environ.core :as environ])
   (:import (org.apache.kafka.common.serialization StringDeserializer)
-           (org.apache.kafka.clients.consumer KafkaConsumer ConsumerRecord MockConsumer OffsetResetStrategy)
+           (org.apache.kafka.clients.consumer KafkaConsumer MockConsumer OffsetResetStrategy)
            (org.apache.kafka.common TopicPartition)
            (java.time Duration)))
-
-(def error-handler-interceptor
-  (error/error-dispatch [ctx ex]
-                        [{:exception-type :clojure.lang.ExceptionInfo}]
-                        (let [{:keys [type status cause reason]} (ex-data ex)]
-                          (cond
-                            (= type :validation) (assoc ctx :response {:status 401
-                                                                       :body   {:cause "Invalid token"}})
-                            :else (assoc ctx :response {:status status
-                                                        :body   {:cause (or cause reason)}})))
-
-                        :else
-                        (let []
-                          (assoc ctx :response {:status 500 :body (str ex)}))))
 
 (def kafka-client-starter
   (interceptor/interceptor
