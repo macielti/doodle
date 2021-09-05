@@ -14,6 +14,7 @@
                  [org.clojure/clojure "1.10.1"]
                  [camel-snake-kebab "0.4.2"]
                  [prismatic/schema "1.1.11"]
+                 [clj-http-fake "1.0.3"]
                  [clj-sendgrid "0.1.2"]
                  [cheshire "5.10.0"]
                  [spyscope "0.1.6"]

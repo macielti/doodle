@@ -14,6 +14,20 @@
            (org.apache.kafka.common TopicPartition)
            (java.time Duration)))
 
+(def error-handler-interceptor
+  (error/error-dispatch [ctx ex]
+                        [{:exception-type :clojure.lang.ExceptionInfo}]
+                        (let [{:keys [type status cause reason]} (ex-data ex)]
+                          (cond
+                            (= type :validation) (assoc ctx :response {:status 401
+                                                                       :body   {:cause "Invalid token"}})
+                            :else (assoc ctx :response {:status status
+                                                        :body   {:cause (or cause reason)}})))
+
+                        :else
+                        (let []
+                          (assoc ctx :response {:status 500 :body (str ex)}))))
+
 (def kafka-client-starter
   (interceptor/interceptor
     {:name  ::kafka-client
@@ -58,18 +72,13 @@
   (interceptor/interceptor
     {:name  ::kafka-consumer
      :enter (fn [{:keys [kafka-client topic-consumers components] :as context}]
-              (try
-                (future
-                  (while true
-                    (let [records (seq (.poll kafka-client (Duration/ofMillis 100)))]
-                      (doseq [record records]
-                        (let [{:keys [topic] :as message} (kafka-record->clj-message record)
-                              {:keys [handler]} (handler-by-topic topic topic-consumers)]
-                          (handler message components))))))
-                (catch Exception ex
-                  (log/error ex)
-                  (.close kafka-client)))
-              context)}))
+              (assoc context :loop-consumer (future
+                                              (while true
+                                                (let [records (seq (.poll kafka-client (Duration/ofMillis 100)))]
+                                                  (doseq [record records]
+                                                    (let [{:keys [topic] :as message} (kafka-record->clj-message record)
+                                                          {:keys [handler]} (handler-by-topic topic topic-consumers)]
+                                                      (handler message components))))))))}))
 
 (s/defrecord Consumer [config]
   component/Lifecycle
@@ -90,10 +99,11 @@
               (false? (= env :test)) (assoc :consumer (-> (chain/execute context [kafka-client-starter subscriber kafka-consumer!])
                                                           :kafka-client))
               (= env :test) (assoc :consumer (-> (chain/execute context [mock-kafka-client-starter mock-subscriber kafka-consumer!])
-                                                 :kafka-client)))))
+                                                 (select-keys [:loop-consumer :kafka-client]))))))
 
-  (stop [{:keys [consumer] :as this}]
-    (.close consumer)
+  (stop [{{:keys [kafka-client loop-consumer]} :consumer :as this}]
+    (deref loop-consumer 5000 loop-consumer)
+    (.close kafka-client)
     (assoc this :consumer nil)))
 
 (defn new-consumer []

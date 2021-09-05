@@ -1,6 +1,7 @@
 (ns integration.notification
   (:use [clojure pprint])
   (:require [clojure.test :refer :all]
+            [clj-http.fake :refer [with-global-fake-routes]]
             [com.stuartsierra.component :as component]
             [microservice-notification.components :as components]
             [schema.test :as s]
@@ -9,10 +10,12 @@
 
 (use-fixtures :once s/validate-schemas)
 
-(s/deftest auth-test
-  (let [{{:keys [consumer]} :consumer :as system} (components/start-system!)]
+(s/deftest notification-test
+  (with-global-fake-routes
+    {"https://api.sendgrid.com/v3/mail/send" (constantly {})}
+    (let [{{:keys [consumer]} :consumer :as system} (components/start-system!)]
 
-    (.addRecord consumer (ConsumerRecord. "notification" 0 (long 2) nil (json/encode {:email   "brunodonascimentomaciel@gmail.com"
-                                                                                      :title   "Password Reset"
-                                                                                      :content "Link to reset password"})))
-    (component/stop system)))
+      (.addRecord (:kafka-client consumer) (ConsumerRecord. "notification" 0 (long 0) nil (json/encode {:email   "brunodonascimentomaciel@gmail.com"
+                                                                                                        :title   "Password Reset"
+                                                                                                        :content "Link to reset password"})))
+      (component/stop system))))
