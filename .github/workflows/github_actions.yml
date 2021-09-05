@@ -14,6 +14,7 @@ jobs:
       - name: Run tests
         run: lein test
       - name: Archive production artifacts
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
           name: dist-without-markdown
