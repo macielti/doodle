@@ -19,4 +19,4 @@ jobs:
         with:
           name: dist-without-markdown
           path: |
-            tmp
+            /tmp
