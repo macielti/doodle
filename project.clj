@@ -4,7 +4,7 @@
             :url  "https://www.eclipse.org/legal/epl-2.0/"}
 
   :plugins [[lein-cloverage "1.2.2"]
-            [lein-environ "1.2.0"]]
+            [lein-environ "1.2.0" :exclusions [org.clojure/clojure org.clojure/core.rrb-vector]]]
 
   :dependencies [[ch.qos.logback/logback-classic "1.2.3"]
                  [org.apache.kafka/kafka-clients "2.1.0"]
