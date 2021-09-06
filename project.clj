@@ -6,7 +6,8 @@
   :plugins [[lein-cloverage "1.2.2"]
             [lein-environ "1.2.0"]]
 
-  :dependencies [[ch.qos.logback/logback-classic "1.2.3"]
+  :dependencies [[net.clojars.macielti/common-clj "0.2.1"]
+                 [ch.qos.logback/logback-classic "1.2.3"]
                  [org.apache.kafka/kafka-clients "2.1.0"]
                  [io.pedestal/pedestal.service "0.5.7"]
                  [com.stuartsierra/component "1.0.0"]
@@ -19,7 +20,7 @@
                  [cheshire "5.10.0"]
                  [environ "1.2.0"]]
 
-  :profiles {:test {:env {:clj-env "test"
+  :profiles {:test {:env {:clj-env         "test"
                           :clj-config-path "resources/config.example.json"}}}
 
   :resource-paths ["resources"]
