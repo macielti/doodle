@@ -11,5 +11,5 @@ pom.xml.asc
 .hgignore
 .hg/
 /.idea/
-/microservice-notification.iml
+/doodle.iml
 /resources/config.json

@@ -1,3 +1,3 @@
-# Introduction to microservice-notification
+# Introduction to Doodle
 
 TODO: write [great documentation](http://jacobian.org/writing/what-to-write/)

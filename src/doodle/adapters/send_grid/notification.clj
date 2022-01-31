@@ -1,6 +1,6 @@
-(ns microservice-notification.adapters.send-grid.notification
+(ns doodle.adapters.send-grid.notification
   (:require [schema.core :as s]
-            [microservice-notification.wire.in.notification :as wire.in.notification]))
+            [doodle.wire.in.notification :as wire.in.notification]))
 
 (s/defn ->wire
   [{:keys [value]} :- wire.in.notification/NotificationMessage
