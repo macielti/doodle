@@ -1,10 +1,9 @@
-(ns microservice-notification.config
-  (:use [clojure pprint])
-  (:require [microservice-notification.adapters.common :as adapters.common]
-            [com.stuartsierra.component :as component]
-            [cheshire.core :as json]
+(ns doodle.config
+  (:require [cheshire.core :as json]
             [environ.core :as environ]
-            [clojure.tools.logging :as log]))
+            [clojure.tools.logging :as log]
+            [doodle.adapters.common :as adapters.common]
+            [com.stuartsierra.component :as component]))
 
 (defrecord Config []
   component/Lifecycle

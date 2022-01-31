@@ -5,7 +5,7 @@
   "topics": [
     "notification"
   ],
-  "serviceName": "microservice-notification",
+  "serviceName": "doodle",
   "sendGridKey": "random-api-key",
   "companyEmail": "example@example.com"
 }

@@ -1,12 +1,11 @@
-(ns microservice-notification.consumer
-  (:use [clojure pprint])
-  (:require [com.stuartsierra.component :as component]
-            [schema.core :as s]
-            [microservice-notification.diplomatic.consumer :as diplomatic.consumer]
-            [io.pedestal.interceptor :as interceptor]
-            [io.pedestal.interceptor.chain :as chain]
+(ns doodle.consumer
+  (:require [schema.core :as s]
             [cheshire.core :as json]
-            [environ.core :as environ])
+            [environ.core :as environ]
+            [com.stuartsierra.component :as component]
+            [io.pedestal.interceptor.chain :as chain]
+            [io.pedestal.interceptor :as interceptor]
+            [doodle.diplomatic.consumer :as diplomatic.consumer])
   (:import (org.apache.kafka.common.serialization StringDeserializer)
            (org.apache.kafka.clients.consumer KafkaConsumer MockConsumer OffsetResetStrategy)
            (org.apache.kafka.common TopicPartition)

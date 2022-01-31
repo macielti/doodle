@@ -1,9 +1,9 @@
-(ns microservice-notification.diplomatic.consumer
-  (:require [microservice-notification.wire.in.notification :as wire.in.notification]
-            [microservice-notification.adapters.send-grid.notification :as adapters.send-grid.notification]
-            [clojure.tools.logging :as log]
+(ns doodle.diplomatic.consumer
+  (:require [schema.core :as s]
             [sendgrid.core :as sg]
-            [schema.core :as s])
+            [clojure.tools.logging :as log]
+            [doodle.wire.in.notification :as wire.in.notification]
+            [doodle.adapters.send-grid.notification :as adapters.send-grid.notification])
   (:import (clojure.lang ExceptionInfo)))
 
 (s/defn send-notification!

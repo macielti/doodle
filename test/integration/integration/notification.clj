@@ -1,11 +1,10 @@
 (ns integration.notification
-  (:use [clojure pprint])
   (:require [clojure.test :refer :all]
-            [clj-http.fake :refer [with-global-fake-routes]]
-            [com.stuartsierra.component :as component]
-            [microservice-notification.components :as components]
             [schema.test :as s]
-            [cheshire.core :as json])
+            [cheshire.core :as json]
+            [com.stuartsierra.component :as component]
+            [clj-http.fake :refer [with-global-fake-routes]]
+            [doodle.components :as components])
   (:import (org.apache.kafka.clients.consumer ConsumerRecord)
            (java.util UUID)))
 

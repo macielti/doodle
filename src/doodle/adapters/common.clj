@@ -1,4 +1,4 @@
-(ns microservice-notification.adapters.common
+(ns doodle.adapters.common
   (:require [camel-snake-kebab.core :refer [->kebab-case]]
             [schema.core :as s]))
 

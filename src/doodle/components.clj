@@ -1,7 +1,7 @@
-(ns microservice-notification.components
+(ns doodle.components
   (:require [com.stuartsierra.component :as component]
-            [microservice-notification.config :as config]
-            [microservice-notification.consumer :as consumer]))
+            [doodle.config :as config]
+            [doodle.consumer :as consumer]))
 
 (defn component-system []
   (component/system-map
