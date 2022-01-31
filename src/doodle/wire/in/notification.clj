@@ -1,4 +1,4 @@
-(ns microservice-notification.wire.in.notification
+(ns doodle.wire.in.notification
   (:require [schema.core :as s]
             [common-clj.schema.core :as schema]))
 
