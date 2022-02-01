@@ -1,11 +1,24 @@
 {
-  "datomicUri": "datomic:mem://example",
-  "JWTokenSecret": "ey5CWUnp9YvYmsZZ66J1IM90LOzuP721",
-  "bootstrapServer": "http://localhost:9092",
-  "topics": [
-    "notification"
-  ],
-  "serviceName": "doodle",
-  "sendGridKey": "random-api-key",
-  "companyEmail": "example@example.com"
+  "prod": {
+    "datomicUri": "datomic:mem://example",
+    "JWTokenSecret": "secret",
+    "bootstrapServer": "http://localhost:9092",
+    "topics": [
+      "notification"
+    ],
+    "serviceName": "doodle",
+    "sendGridKey": "SG.sercret.sercret",
+    "companyEmail": "example@example.com"
+  },
+  "test": {
+    "datomicUri": "datomic:mem://example",
+    "JWTokenSecret": "secret",
+    "bootstrapServer": "http://localhost:9092",
+    "topics": [
+      "notification"
+    ],
+    "serviceName": "doodle",
+    "sendGridKey": "SG.secret.secret",
+    "companyEmail": "example@example.com"
+  }
 }
