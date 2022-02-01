@@ -11,7 +11,7 @@
 
 (def system-test
   (component/system-map
-    :config (component.config/new-config "resources/config.json" :test)
+    :config (component.config/new-config "resources/config.example.json" :test)
     :consumer (component/using (component.consumer/new-consumer diplomatic.consumer/topic-consumers) [:config])))
 
 (defn start-system! []
