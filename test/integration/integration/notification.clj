@@ -8,8 +8,6 @@
   (:import (org.apache.kafka.clients.consumer ConsumerRecord)
            (java.util UUID)))
 
-(use-fixtures :once s/validate-schemas)
-
 (s/deftest notification-test
   (with-global-fake-routes
     {"https://api.sendgrid.com/v3/mail/send" (constantly {})}
