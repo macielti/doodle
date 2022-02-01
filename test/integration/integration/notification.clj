@@ -13,7 +13,7 @@
 (s/deftest notification-test
   (with-global-fake-routes
     {"https://api.sendgrid.com/v3/mail/send" (constantly {})}
-    (let [{{:keys [consumer]} :consumer :as system} (components/start-system!)]
+    (let [{{:keys [consumer]} :consumer :as system} (component/start components/system-test)]
 
       (.addRecord (:kafka-client consumer) (ConsumerRecord. "notification" 0 (long 0) nil (json/encode {:email             "brunodonascimentomaciel@gmail.com"
                                                                                                         :password-reset-id (str (UUID/randomUUID))
