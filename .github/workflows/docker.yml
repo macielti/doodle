@@ -1,0 +1,21 @@
+name: Dockerfile Image
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build an Push Dockerfile Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Dockerfile Image
+        run: |
+          VERSION=$(date +%s)
+          docker login docker.pkg.github.com --username macielti --password ${{ secrets.GITHUB_TOKEN }}
+          docker build . --file Dockerfile --tag docker.pkg.github.com/macielti/doodle/doodle:${VERSION}
+          docker push docker.pkg.github.com/macielti/doodle/doodle:${VERSION}
+        env:
+          CI: true
