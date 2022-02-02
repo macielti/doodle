@@ -1,4 +1,4 @@
-name: Docker Image
+name: Dockerfile Image
 
 on:
   push:
@@ -8,12 +8,12 @@ on:
 
 jobs:
   build:
-    name: Build an Push Docker Image
+    name: Build an Push Dockerfile Image
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
-      - name: Build Docker Image
+      - name: Build Dockerfile Image
         run: |
           VERSION=$(date +%s)
           docker login docker.pkg.github.com --username macielti --password ${{ secrets.GITHUB_TOKEN }}
