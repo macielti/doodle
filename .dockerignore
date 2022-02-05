@@ -12,5 +12,6 @@ pom.xml.asc
 .hg/
 /.idea/
 doodle.iml
-/resources/
+resources/config.json
+resources/config.example.json
 Dockerfile
