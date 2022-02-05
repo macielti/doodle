@@ -7,16 +7,16 @@
   (:import (clojure.lang ExceptionInfo)))
 
 (s/defn send-notification!
-  [{:keys [value] :as message} :- wire.in.notification/NotificationMessage
+  [{:keys [message] :as document} :- wire.in.notification/NotificationDocument
    {{:keys [send-grid-key company-email]} :config}]
-  (try (s/validate wire.in.notification/NotificationMessage message)
+  (try (s/validate wire.in.notification/NotificationDocument document)
        (catch ExceptionInfo e
          (log/error e)))
-  (let [result (sg/send-email (adapters.send-grid.notification/->wire message
+  (let [result (sg/send-email (adapters.send-grid.notification/->wire document
                                                                       company-email
                                                                       send-grid-key))]
-    (log/info message result)))
+    (log/info document result)))
 
 (def topic-consumers
-  {:notification {:schema  wire.in.notification/NotificationMessage
+  {:notification {:schema  wire.in.notification/NotificationDocument
                   :handler send-notification!}})
