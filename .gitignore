@@ -13,3 +13,4 @@ pom.xml.asc
 /.idea/
 /doodle.iml
 /resources/config.json
+/resources/config.edn

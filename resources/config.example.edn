@@ -1,0 +1,7 @@
+{:test {:service-name     "doodle"
+        :datomic-uri      "datomic:mem://example"
+        :jwt-secret       "secret"
+        :bootstrap-server "http://localhost:9092"
+        :topics           ["notification"]
+        :send-grid-key    "SG.secret.secret"
+        :company-email    "example@example.com"}}
