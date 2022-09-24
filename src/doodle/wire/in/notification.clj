@@ -4,10 +4,9 @@
 
 ;TODO: verify is the skeleton pattern naming is used only for datomic entities
 (def notification-document-skeleton
-  {:topic   (s/enum :notification)
-   :message {:email   s/Str
-             :title   s/Str
-             :content s/Str}})
+  {:email   s/Str
+   :title   s/Str
+   :content s/Str})
 
 (s/defschema NotificationDocument
   (schema/loose-schema notification-document-skeleton))

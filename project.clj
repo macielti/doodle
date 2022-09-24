@@ -8,8 +8,7 @@
 
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [danlentz/clj-uuid "0.1.9"]
-                 [net.clojars.macielti/common-clj "17.22.19"]
-                 [ch.qos.logback/logback-classic "1.4.1"]
+                 [net.clojars.macielti/common-clj "18.22.19"]
                  [org.apache.kafka/kafka-clients "2.8.0"]
                  [io.pedestal/pedestal.service "0.5.10"]
                  [com.stuartsierra/component "1.1.0"]
@@ -18,7 +17,10 @@
                  [clj-http-fake "1.0.3"]
                  [clj-sendgrid "0.1.2"]
                  [cheshire "5.11.0"]
-                 [environ "1.2.0"]]
+                 [environ "1.2.0"]
+                 [hashp "0.2.1"]]
+
+  :injections [(require 'hashp.core)]
 
   :profiles {:test {:env {:clj-env         "test"
                           :clj-config-path "resources/config.example.json"}}}
