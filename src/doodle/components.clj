@@ -7,14 +7,14 @@
 
 (def system
   (component/system-map
-    :config (component.config/new-config "resources/config.json" :prod)
+    :config (component.config/new-config "resources/config.edn" :prod :edn)
     :consumer (component/using (component.kafka.consumer/new-consumer diplomatic.consumer/topic-consumers) [:config])))
 
 (def system-test
   (component/system-map
-    :config (component.config/new-config "resources/config.example.json" :test)
-    :consumer (component/using (component.kafka.consumer/new-mock-consumer diplomatic.consumer/topic-consumers) [:config])
-    :producer (component/using (component.kafka.producer/new-mock-producer) [:config :consumer])))
+    :config (component.config/new-config "resources/config.example.edn" :test :edn)
+    :producer (component/using (component.kafka.producer/new-mock-producer) [:config])
+    :consumer (component/using (component.kafka.consumer/new-mock-consumer diplomatic.consumer/topic-consumers) [:config :producer])))
 
 (defn start-system! []
   (component/start system))

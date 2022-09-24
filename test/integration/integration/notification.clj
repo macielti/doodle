@@ -14,25 +14,26 @@
 (s/deftest notification-test
   (with-global-fake-routes
     {"https://api.sendgrid.com/v3/mail/send" (constantly {})}
-    (let [{{:keys [consumer]} :consumer :as system} (component/start components/system-test)
+    (let [system (component/start components/system-test)
           producer (component.helper/get-component-content :producer system)
           consumer (component.helper/get-component-content :consumer system)]
 
-      (component.kafka.producer/produce! {:topic   :notification
-                                          :message {:email             "brunodonascimentomaciel@gmail.com"
-                                                    :password-reset-id (str (UUID/randomUUID))
-                                                    :title             "Password Reset"
-                                                    :content           "Link to reset password"}}
+      (component.kafka.producer/produce! {:topic :notification
+                                          :data  {:payload {:email             "brunodonascimentomaciel@gmail.com"
+                                                            :password-reset-id (str (UUID/randomUUID))
+                                                            :title             "Password Reset"
+                                                            :content           "Link to reset password"}}}
                                          producer)
 
       (Thread/sleep 5000)
 
       (testing "that the message was consumed with success"
-        (is (match? [{:message {:content           "Link to reset password"
-                                :email             "brunodonascimentomaciel@gmail.com"
-                                :password-reset-id clj-uuid/uuid-string?
-                                :title             "Password Reset"}
-                      :topic   :notification}]
+        (is (match? [{:topic :notification
+                      :data  {:meta    {:correlation-id "DEFAULT"}
+                              :payload {:email             "brunodonascimentomaciel@gmail.com"
+                                        :password-reset-id clj-uuid/uuid-string?
+                                        :title             "Password Reset"
+                                        :content           "Link to reset password"}}}]
                     (component.kafka.consumer/consumed-messages consumer))))
 
       (component/stop system))))
